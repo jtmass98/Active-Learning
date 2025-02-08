@@ -10,15 +10,15 @@ import os
 import numpy as np
 
 frames=[]
-for i in range(31):
-    frames.append(imageio.imread('Figures/1/heatmaps'+str(i)+'.png'))
+for i in range(40):
+    frames.append(imageio.imread('Figures/2/heatmaps'+str(i)+'.png'))
 
 
 
 
 
 # Parameters  # Change this to your folder
-output_gif = "heatmap_animation_1.gif"
+output_gif = "heatmap_animation_2.gif"
 duration = 0.1  # Seconds per frame
 
 

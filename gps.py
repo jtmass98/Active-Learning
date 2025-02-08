@@ -22,6 +22,7 @@ class MyGP(gpytorch.models.ExactGP):
         self.N=train_x.shape[0]
         lengthscale_prior = gpytorch.priors.GammaPrior(2, 0.1)  # Adjust parameters as needed
         self.mean_module = gpytorch.means.ZeroMean()
+        #matern lengthscale seems more stable with discrete inputs
         self.covar_module = gpytorch.kernels.ScaleKernel(
             gpytorch.kernels.MaternKernel(nu=2.5, lengthscale_prior=lengthscale_prior)
         )
@@ -31,6 +32,7 @@ class MyGP(gpytorch.models.ExactGP):
         covar = self.covar_module(x)
         return gpytorch.distributions.MultivariateNormal(mean, covar)
     def heatmap(self,N):
+        #generate the current heatmap
         x=[[i,j] for i in range(N) for j in range(N)]
         self.eval()
         self.likelihood.eval()
@@ -46,26 +48,29 @@ class MyGP(gpytorch.models.ExactGP):
             
             
     def update_train_data(self, new_train_x, new_train_y):
+        #add the new point to the training set
         self.set_train_data(inputs=new_train_x, targets=new_train_y, strict=False)
         self.N=new_train_x.shape[0]
     
 def EI(x,model,f_star):
+    ##expected improvement function
     x=torch.Tensor(x.reshape(1,2))
     with torch.no_grad():  # Disable gradient computation
         out = model(x)
     mu,sig=out.mean.item(), out.stddev.item()
     I=max(0,mu-f_star)
     Z=I/max(sig,1e-9)
-    ei = I*norm.cdf(Z) + 0.00000001*sig*norm.pdf(Z)
+    ei = I*norm.cdf(Z) + 0.00000001*sig*norm.pdf(Z) #downweight the exploration
     return -ei 
 
 def output(x,model):
+    #used to find the maximum temperature
     x=torch.Tensor(x.reshape(1,2))
     with torch.no_grad():  # Disable gradient computation
         out = model(x)
     mu,sig=out.mean.item(), out.stddev.item()
 
-    return -mu ##negative so it is minimised to find the mnaximumI
+    return -mu ##negative so it is minimised to find the maximum
         
         
         
@@ -73,6 +78,7 @@ def output(x,model):
         
 
 def next_sample(data,model,size):
+    #find the coordinates of the next sample to measure
     train_x=data[0].reshape(-1,2)
     train_y=data[1].reshape(-1,)
     f_star=torch.max(train_y)
@@ -132,6 +138,7 @@ def train_gps(model,train_x,train_y):
     return model
 
 def optimiser(model,f_star,size):
+    ##find the next spot to measure
     bounds = [(0, size),(0,size)]  # Search space bounds
     x_init = np.random.rand(200, 2)*size  # Random restarts
     
@@ -147,6 +154,7 @@ def optimiser(model,f_star,size):
     return best_x
     
 def maximiser(model,size):
+    #find the current maximum
     bounds = [(0, size),(0,size)]  # Search space bounds
     x_init = np.random.rand(200, 2)*size  # Random restarts
     
