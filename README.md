@@ -2,7 +2,7 @@ This is a toy example I used to learn the fundementals of active learning. The t
 
 ![Alt Text](True_heatmap.png)
 
-and this is the process of active learning to learn the heatmap and find the maximum:
+The temperature is multi-modal and has stationary smoothness. The animation below shows the process of active learning to learn the temperature distribution and find the maximum:
 
 ![Alt Text](heatmap_animation.gif) 
 
