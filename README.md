@@ -6,4 +6,4 @@ and this is the process of active learning to learn the heatmap and find the max
 
 ![Alt Text](heatmap_animation.gif) 
 
-The algorithm balances exploiting the peaks of the fitted GP with exploring areas with high uncertainty.
+The algorithm balances exploiting the peaks of the fitted GP with exploring areas with high uncertainty. Note that there is a uniform distribution of test points which is representative of the smoothness of the true function. There are additional points close to the maximum to try to pinpoint it. Given more points, the algorithm would likely further explore the maximum to find further gains.
