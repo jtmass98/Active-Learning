@@ -1,4 +1,4 @@
-This is a toy example I used to learn the fundementals of active learning. The task is to find the maximum temperature in a room with multiple heat sources. It uses GPytorch to fit the GP to the objective space. In an example, the true heatmap is:
+This is a toy active learning project. The task is to find the maximum temperature in a room with multiple heat sources. It uses GPytorch to fit the GP to the objective space. In an example, the true heatmap is:
 
 ![Alt Text](True_heatmap.png)
 
